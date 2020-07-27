@@ -1,0 +1,38 @@
+version: '3'
+services:
+  database:
+    container_name: database
+    build: 
+      context: ./database
+      dockerfile: Dockerfile
+    image: quiz/database
+    healthcheck:
+      test: "exit 0"
+    ports:
+      - "8080:3306"
+    environment: 
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: nishanth
+      MYSQL_PASSWORD: Nishanth#1    
+    networks:
+      local_network:
+        ipv4_address: 172.18.0.10
+    volumes: 
+      - ./database/data:/var/lib/mysql
+  server:
+    container_name: server
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    image: quiz/server
+    ports: 
+      - "3000:3000"
+    networks:
+      local_network:
+          ipv4_address: 172.18.0.4
+networks:
+  local_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.0.0/24
